@@ -1,0 +1,15 @@
+using UnityEngine;
+using PumpFrame;
+
+#NameSpaceBegin#
+public class #ScriptName# : FrameUnitMono
+{
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+    void Start()
+    {
+    }
+}
+#NameSpaceEnd#

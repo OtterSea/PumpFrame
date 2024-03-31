@@ -1,0 +1,13 @@
+using UnityEngine;
+
+#NameSpaceBegin#
+public class #ScriptName# : MonoBehaviour
+{
+    void Awake()
+    {
+    }
+    void Start()
+    {
+    }
+}
+#NameSpaceEnd#

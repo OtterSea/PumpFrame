@@ -1,0 +1,8 @@
+using UnityEngine;
+
+#NameSpaceBegin#
+public class #ScriptName#
+{
+    
+}
+#NameSpaceEnd#
