@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,6 +52,14 @@ namespace PumpFrame
             return value != 0;
         }
 
-
+        public static LayerMask GetTargetLayerMask(string targetLayer)
+        {
+            int layer = LayerMask.NameToLayer(targetLayer);
+            if (layer < 0)
+            {
+                throw new Exception($"错误的layer名：{targetLayer}, 检查layer是否存在");
+            }
+            return new LayerMask(){ value = 1 << layer };
+        }
     }
 }
