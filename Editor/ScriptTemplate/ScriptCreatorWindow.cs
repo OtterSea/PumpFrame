@@ -28,6 +28,7 @@ namespace PumpFrame.Editor
         private string _templateName;
         private string _scriptName;
         private string _nameSpace;
+        private const string namespaceKey = "PumpFrame-Editor-ScriptCreator-NameSpace";
 
         private static int _selectFileIndex;
         private static string[] _allFileFullName;
@@ -64,18 +65,29 @@ namespace PumpFrame.Editor
             _selectFileIndex = EditorGUILayout.Popup("TemplateName", _selectFileIndex, _allFileFullName);
             _templateName = _allFileFullName[_selectFileIndex];
 
+            //命名空间
+            _nameSpace = EditorGUILayout.TextField("NameSpace", _nameSpace);
+            if (string.IsNullOrEmpty(_nameSpace))
+            {
+                if (PlayerPrefs.HasKey(namespaceKey))
+                {
+                    _nameSpace = PlayerPrefs.GetString(namespaceKey);
+                    if (string.IsNullOrEmpty(_nameSpace))
+                    {
+                        _nameSpace = null;
+                    }
+                }
+                else
+                {
+                    _nameSpace = null;
+                }
+            }
+            
             //文件名
             _scriptName = EditorGUILayout.TextField("ScriptName", _scriptName);
             if (string.IsNullOrEmpty(_scriptName))
             {
                 _scriptName = "NewScript";
-            }
-
-            //命名空间
-            _nameSpace = EditorGUILayout.TextField("NameSpace", _nameSpace);
-            if (string.IsNullOrEmpty(_nameSpace))
-            {
-                _nameSpace = null;
             }
 
             //创建按钮
@@ -122,6 +134,7 @@ namespace PumpFrame.Editor
                     {
                         codeSrc = codeSrc.Replace("#NameSpaceBegin#", $"namespace {_nameSpace}\n{{");
                         codeSrc = codeSrc.Replace("#NameSpaceEnd#", "}");
+                        PlayerPrefs.SetString(namespaceKey, _nameSpace);
                     }
                     else
                     {

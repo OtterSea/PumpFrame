@@ -8,9 +8,10 @@ namespace PumpFrame
     //按照顺序执行frameUnit
     public enum FrameUnitQueue
     {
-        Normal,     //所有普通mono，最开始更新状态、动画机
-        Rigidbody,  //主要处理刚体位移（KCC）
-        HitBox,     //主要处理打击盒、命中事件
+        Normal = 0,     //玩家控制器，输入等处理
+        Rigidbody,      //主要处理刚体位移（KCC）
+        HitBox,         //主要处理打击盒，命中事件
+        View,           //可视物动画更新，特效更新等
     }
     
     public class FrameHandler
@@ -23,7 +24,7 @@ namespace PumpFrame
         }
 
         //调用列表
-        private readonly Dictionary<FrameUnitQueue, List<FrameUnit>> _unitListDict;
+        private readonly List<List<FrameUnit>> _unitList;
         private float _remainTime;
 
         //比率
@@ -34,20 +35,18 @@ namespace PumpFrame
         {
             int defaultCapacity = 10;
             _remainTime = 0f;
-
-            _unitListDict = new Dictionary<FrameUnitQueue, List<FrameUnit>>()
+            
+            _unitList = new List<List<FrameUnit>>();
+            string[] enumLength = System.Enum.GetNames(typeof(FrameUnitQueue));
+            for (int i = 0; i < enumLength.Length; i++)
             {
-                {FrameUnitQueue.Normal, new List<FrameUnit>(defaultCapacity)},
-                {FrameUnitQueue.Rigidbody, new List<FrameUnit>(defaultCapacity)},
-                {FrameUnitQueue.HitBox, new List<FrameUnit>(defaultCapacity)},
-            };
+                _unitList.Add(new List<FrameUnit>(defaultCapacity));
+            }
         }
 
         internal FrameUnit GetFrameUnit(FrameUnitQueue queue = FrameUnitQueue.Normal)
         {
-            List<FrameUnit> unitList;
-            if (!_unitListDict.TryGetValue(queue, out unitList))
-                throw new Exception($"没有此队列的unitList：{queue}");
+            List<FrameUnit> unitList = _unitList[(int)queue];
             
             //从List寻找是否有无效的FrameUnit
             foreach (FrameUnit unit in unitList)
@@ -82,11 +81,11 @@ namespace PumpFrame
                 isTickLogic = true;
             }
 
-            foreach (var unitListKv in _unitListDict)
+            foreach (var unitList in _unitList)
             {
                 if (isTickLogic)
                 {
-                    foreach (FrameUnit unit in unitListKv.Value)
+                    foreach (FrameUnit unit in unitList)
                     {
                         unit.Update(deltaTime);
                         unit.LogicTick();
@@ -94,7 +93,7 @@ namespace PumpFrame
                 }
                 else
                 {
-                    foreach (FrameUnit unit in unitListKv.Value)
+                    foreach (FrameUnit unit in unitList)
                     {
                         unit.Update(deltaTime);
                     }
