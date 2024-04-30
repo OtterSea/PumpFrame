@@ -1,6 +1,9 @@
+using System;
 using System.Diagnostics;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
+using System.Reflection;
+using Sirenix.Utilities;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -43,6 +46,16 @@ namespace PumpFrame
             Debug.Assert(condition, msg, context);
         }
 
+        [Conditional("PUMPBUG")]
+        public static void DumpObject<T>(T obj) where T : new()
+        {
+            Type type = obj.GetType();
+            FieldInfo[] fields = type.GetFields();
+            foreach (FieldInfo field in fields) {
+                Debuger.Print($"dump member-name: {field.Name} - {field.GetValue(obj)}");
+            }
+        }
+        
         /// <summary>
         /// 暂停游戏
         /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace PumpFrame.Editor
+namespace PumpFrame
 {
     /// <summary>
     /// 使用的时候记得套上UNITY_EDITOR
