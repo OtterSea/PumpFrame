@@ -38,9 +38,12 @@ namespace PumpFrame
         
         public void OnDrawGizmos()
         {
-            foreach (var ghc in capsuleList)
+            if (capsuleList != null)
             {
-                GizmosHelper.DrawCapsule(ghc.originPos, ghc.targetPos, ghc.radius, ghc.color);
+                foreach (var ghc in capsuleList)
+                {
+                    GizmosHelper.DrawCapsule(ghc.originPos, ghc.targetPos, ghc.radius, ghc.color);
+                }
             }
         }
     }

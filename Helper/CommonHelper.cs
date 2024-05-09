@@ -18,7 +18,45 @@ namespace PumpFrame
 
         #endregion
 
+        #region 数学相关
+        
+        //C#的数字并没有bool含义
+        public static int BoolToInteger(bool value)
+        {
+            if (value)
+                return 1;
+            return 0;
+        }
+        public static bool IntToBool(int value)
+        {
+            return value != 0;
+        }
+        
+        #endregion
+        
+        #region C#类相关
 
+        /// <summary>
+        /// 深拷贝一个C#类对象，有空测一下是否能测Class类成员对象
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T DeepCloneClass<T>(T obj) where T : class, new()
+        {
+            Type objType = obj.GetType();
+            object cloneObj = Activator.CreateInstance(objType);
+            foreach (var fieldInfo in objType.GetFields())
+            {
+                fieldInfo.SetValue(cloneObj, fieldInfo.GetValue(obj));
+            }
+            return cloneObj as T;
+        }
+        
+        #endregion
+        
+        #region Unity相关
+        
         public static Transform GetChildTransformByName(Transform parent, string childName)
         {
             Transform tran;
@@ -40,18 +78,6 @@ namespace PumpFrame
             return (layerMask.value & objLayerMask) > 0;
         }
 
-        //C#的数字并没有bool含义
-        public static int BoolToInteger(bool value)
-        {
-            if (value)
-                return 1;
-            return 0;
-        }
-        public static bool IntToBool(int value)
-        {
-            return value != 0;
-        }
-
         public static LayerMask GetTargetLayerMask(string targetLayer)
         {
             int layer = LayerMask.NameToLayer(targetLayer);
@@ -61,5 +87,7 @@ namespace PumpFrame
             }
             return new LayerMask(){ value = 1 << layer };
         }
+        
+        #endregion
     }
 }

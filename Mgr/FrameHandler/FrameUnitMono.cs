@@ -5,7 +5,18 @@ namespace PumpFrame
 {
     public class FrameUnitMono : MonoBehaviour
     {
-        protected FrameUnit frameUnit;
+        private FrameUnit _frameUnit;
+        protected FrameUnit FrameUnit
+        {
+            get
+            {
+                if (_frameUnit == null)
+                {
+                    _frameUnit = GameMgr.FrameHandler.GetFrameUnit(FrameUnitQueue);
+                }
+                return _frameUnit;
+            }
+        }
 
         protected virtual FrameUnitQueue FrameUnitQueue
         {
@@ -17,20 +28,19 @@ namespace PumpFrame
 
         protected virtual void Awake()
         {
-            frameUnit = GameMgr.FrameHandler.GetFrameUnit(FrameUnitQueue);
         }
         protected virtual void OnEnable()
         {
-            frameUnit?.SetActive(true);
+            FrameUnit?.SetActive(true);
         }
         protected virtual void OnDisable()
         {
-            frameUnit?.SetActive(false);
+            FrameUnit?.SetActive(false);
         }
         protected virtual void OnDestroy()
         {
-            GameMgr.FrameHandler.RecycleFrameUnit(frameUnit);
-            frameUnit = null;
+            GameMgr.FrameHandler.RecycleFrameUnit(FrameUnit);
+            _frameUnit = null;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace PumpFrame
 
         //比率
         public static readonly int LogicFrameRate = 30;
-        public static readonly float LogicFrameDeltaTime = 1.0f / 30.0f;
+        public static readonly float LogicFrameDeltaTime = 0.033334f;
 
         public FrameHandler()
         {
