@@ -27,12 +27,13 @@ namespace PumpFrame
 
         private void Start()
         {
-            
+            ParticleMgr.OnInit();
         }
 
         private void Update()
         {
             FrameHandler.OnUpdate(Time.deltaTime);
+            ParticleMgr.OnUpdate(Time.deltaTime);
         }
 
         #region GameMgr功能

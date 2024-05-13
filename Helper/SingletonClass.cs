@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -54,7 +55,8 @@ namespace PumpFrame
         }
     }
     
-    public abstract class SingletonScriptableObject<T> : ScriptableObject where T : SingletonScriptableObject<T>
+    // [CreateAssetMenu(menuName = "PumpFrame/Create GameSetting", fileName = "PumpGameSetting")]
+    public abstract class SingletonScriptableObject<T> : SerializedScriptableObject where T : SingletonScriptableObject<T>
     {
         private static T _instance;
         protected static T Instance
