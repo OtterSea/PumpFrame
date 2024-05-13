@@ -51,9 +51,12 @@ namespace PumpFrame
         {
             Type type = obj.GetType();
             FieldInfo[] fields = type.GetFields();
-            foreach (FieldInfo field in fields) {
-                Debuger.Print($"dump member-name: {field.Name} - {field.GetValue(obj)}");
+            string str = "";
+            foreach (FieldInfo field in fields)
+            {
+                str += $"dump member-name: {field.Name} - {field.GetValue(obj)} \n";
             }
+            Debuger.Print(str);
         }
         
         /// <summary>
