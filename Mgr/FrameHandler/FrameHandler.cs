@@ -8,23 +8,16 @@ namespace PumpFrame
     //按照顺序执行frameUnit
     public enum FrameUnitQueue
     {
-        Normal = 0,     //玩家控制器，输入等处理
+        Normal = 0,     //玩家控制器，输入，AI逻辑 PlayerController AIController等处理
         Rigidbody,      //主要处理刚体位移（KCC）
-        HitBox,         //主要处理打击盒，命中事件
+        HitBox,         //主要处理打击盒，命中事件 (为什么无人使用
         View,           //可视物动画更新，特效更新等
     }
     
     public class FrameHandler
     {
-        private FrameUnit CreateFrameUnit()
-        {
-            FrameUnit unit = new FrameUnit();
-            unit.Clear();
-            return unit;
-        }
-
         //调用列表
-        private readonly List<List<FrameUnit>> _unitList;
+        private readonly List<FrameUnitQueueItem> _queueItemList;
         private float _remainTime;
 
         //比率
@@ -36,33 +29,18 @@ namespace PumpFrame
             int defaultCapacity = 10;
             _remainTime = 0f;
             
-            _unitList = new List<List<FrameUnit>>();
+            _queueItemList = new List<FrameUnitQueueItem>();
             string[] enumLength = System.Enum.GetNames(typeof(FrameUnitQueue));
             for (int i = 0; i < enumLength.Length; i++)
             {
-                _unitList.Add(new List<FrameUnit>(defaultCapacity));
+                _queueItemList.Add(new FrameUnitQueueItem(defaultCapacity));
             }
         }
 
         internal FrameUnit GetFrameUnit(FrameUnitQueue queue = FrameUnitQueue.Normal)
         {
-            List<FrameUnit> unitList = _unitList[(int)queue];
-            
-            //从List寻找是否有无效的FrameUnit
-            foreach (FrameUnit unit in unitList)
-            {
-                if (!unit.IsValid)
-                {
-                    unit.Init();
-                    return unit;
-                }
-            }
-
-            //从对象池获得FrameUnit
-            FrameUnit unitNew = this.CreateFrameUnit();
-            unitNew.Init();
-            unitList.Add(unitNew);
-            return unitNew;
+            FrameUnitQueueItem queueItem = _queueItemList[(int)queue];
+            return queueItem.GetFrameUnit();
         }
 
         internal void RecycleFrameUnit(FrameUnit unit)
@@ -70,6 +48,10 @@ namespace PumpFrame
             unit.Clear();
         }
 
+        /// <summary>
+        /// GameMgr负责调用，更新所有Queue
+        /// </summary>
+        /// <param name="deltaTime"></param>
         internal void OnUpdate(float deltaTime)
         {
             //检查是否tick逻辑帧
@@ -81,24 +63,20 @@ namespace PumpFrame
                 isTickLogic = true;
             }
 
-            foreach (var unitList in _unitList)
+            foreach (var queueItem in _queueItemList)
             {
-                if (isTickLogic)
-                {
-                    foreach (FrameUnit unit in unitList)
-                    {
-                        unit.Update(deltaTime);
-                        unit.LogicTick();
-                    }
-                }
-                else
-                {
-                    foreach (FrameUnit unit in unitList)
-                    {
-                        unit.Update(deltaTime);
-                    }
-                }
+                queueItem.OnQueueItemUpdate(deltaTime, isTickLogic);
             }
+        }
+
+        /// <summary>
+        /// 冻结某个Queue队列的执行，freezeLogicCount - 冻结逻辑帧时间
+        /// </summary>
+        /// <param name="freezeLogicCount"></param>
+        public void FreezeFrameUnitQueue(FrameUnitQueue queue, int freezeLogicCount)
+        {
+            FrameUnitQueueItem queueItem = _queueItemList[(int)queue];
+            queueItem.FreezeFrameUnitQueue(freezeLogicCount);
         }
     }
 }
