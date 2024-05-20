@@ -28,6 +28,7 @@ namespace PumpFrame
         private void Start()
         {
             ParticleMgr.OnInit();
+            AudioMgr.OnInit();
         }
 
         private void Update()
