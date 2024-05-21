@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace PumpFrame
@@ -14,17 +15,17 @@ namespace PumpFrame
     /// </summary>
     public class ParticleMgr : Singleton<ParticleMgr>
     {
-        private static Dictionary<string, ParticleUnitPool> _UnitPoolDict;
+        private static Dictionary<string, ParticleUnitPool> _unitPoolDict;
 
         public static void OnInit()
         {
-            _UnitPoolDict = new Dictionary<string, ParticleUnitPool>();
+            _unitPoolDict = new Dictionary<string, ParticleUnitPool>();
         }
 
         //更新所有激活的unit的进度
         public static void OnUpdate(float deltaTime)
         {
-            foreach (var listKv in _UnitPoolDict)
+            foreach (var listKv in _unitPoolDict)
             {
                 listKv.Value.OnUpdateUnit(deltaTime);
             }
@@ -35,32 +36,24 @@ namespace PumpFrame
         private ParticleUnitPool GetParticleUnitPool(string key)
         {
             ParticleUnitPool pool = null;
-            if (!_UnitPoolDict.TryGetValue(key, out pool))
+            if (!_unitPoolDict.TryGetValue(key, out pool))
             {
                 pool = new ParticleUnitPool(key);
-                _UnitPoolDict.Add(key, pool);
+                _unitPoolDict.Add(key, pool);
             }
             return pool;
         }
 
-        private void GetParticleUnit(string key, out ParticleUnit unit)
+        public static void PlayParticle(string key, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            var unitPool = this.GetParticleUnitPool(key);
-            unit = unitPool.UnitPool.Get();
-        }
-
-        public void PlayParticle(string key, Vector3 position, Quaternion rotation, Vector3 scale)
-        {
-            ParticleUnit unit;
-            GetParticleUnit(key, out unit);
-            unit.OnSetActive(unit.GetParticleDuration(), position, rotation, scale);
+            var unitPool = Instance.GetParticleUnitPool(key);
+            unitPool.SetOneUnitActive(position, rotation, scale);
         }
         
-        public void PlayParticle(string key, float duration, Vector3 position, Quaternion rotation, Vector3 scale)
+        public static void PlayParticle(string key, float duration, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            ParticleUnit unit;
-            GetParticleUnit(key, out unit);
-            unit.OnSetActive(duration, position, rotation, scale);
+            var unitPool = Instance.GetParticleUnitPool(key);
+            unitPool.SetOneUnitActive(duration, position, rotation, scale);
         }
         
         #endregion

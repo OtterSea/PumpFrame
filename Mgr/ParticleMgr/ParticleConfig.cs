@@ -19,7 +19,6 @@ namespace PumpFrame
         public static Dictionary<string, GameObject> ParticleDict =>
             Instance.particleDict;
         
-        [NonSerialized, OdinSerialize]
         public Dictionary<string, GameObject> particleDict;
         
         public static string[] GetKeyList()

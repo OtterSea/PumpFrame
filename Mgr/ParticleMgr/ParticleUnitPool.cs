@@ -21,7 +21,8 @@ namespace PumpFrame
         {
             _particleKey = key;
             _particlePrefab = ParticleConfig.GetParticlePrefab(key);
-
+            _activeList = new List<ParticleUnit>();
+            
             _unitPool = new ObjectPool<ParticleUnit>(
                 CreateUnit,
                 null,
@@ -34,7 +35,7 @@ namespace PumpFrame
         {
             _particleKey = null;
             _particlePrefab = null;
-            _unitPool.Clear();
+            UnitPool.Clear();
             ActiveList.Clear();
         }
 
@@ -62,15 +63,29 @@ namespace PumpFrame
 
         public void OnUpdateUnit(float deltaTime)
         {
-            for (int i = ActiveList.Count - 1; i > 0; i--)
+            for (int i = ActiveList.Count - 1; i >= 0; i--)
             {
                 ParticleUnit unit = ActiveList[i];
                 if (!unit.OnUnitUpdate(deltaTime))
                 {
-                    _unitPool.Release(unit);
+                    UnitPool.Release(unit);
                     ActiveList.RemoveAt(i);
                 }
             }
+        }
+        
+        public void SetOneUnitActive(Vector3 position, Quaternion rotation, Vector3 scale)
+        {
+            var unit = UnitPool.Get();
+            unit.OnSetActive(unit.GetParticleDuration(), position, rotation, scale);
+            ActiveList.Add(unit);
+        }
+
+        public void SetOneUnitActive(float duration, Vector3 position, Quaternion rotation, Vector3 scale)
+        {
+            var unit = UnitPool.Get();
+            unit.OnSetActive(duration, position, rotation, scale);
+            ActiveList.Add(unit);
         }
     }
 }

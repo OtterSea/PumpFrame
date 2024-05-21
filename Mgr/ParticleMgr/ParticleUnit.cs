@@ -28,11 +28,13 @@ namespace PumpFrame
             isActive = false;
             remainTime = 0f;
             particleGo = GameObject.Instantiate(prefab);
+            particleGo.SetActive(false);
             particleSys = particleGo.GetComponent<ParticleSystem>();
             if (particleSys == null)
             {
                 throw new Exception($"特效预制体没有ParticleSystem组件:{prefab.name}");
             }
+            particleSys.Stop(true);
         }
 
         //销毁时必须调用此接口
@@ -44,7 +46,7 @@ namespace PumpFrame
         public bool OnUnitUpdate(float deltaTime)
         {
             remainTime -= deltaTime;
-            particleSys.Simulate(deltaTime);
+            // particleSys.Simulate(deltaTime);
             if (remainTime <= 0f)
             {
                 OnSetUnActive();
@@ -60,15 +62,17 @@ namespace PumpFrame
             particleGo.transform.position = position;
             particleGo.transform.rotation = rotation;
             particleGo.transform.localScale = scale;
-            particleSys.Stop();
+            particleSys.Stop(true);
+            particleGo.SetActive(true);
         }
 
         public void OnSetUnActive()
         {
             isActive = false;
             remainTime = 0f;
-            particleGo.transform.position = Vector3.zero;   //移动到相机之外此时的粒子系统应该是完成播放完毕
-            particleSys.Stop();
+            particleGo.SetActive(false);
+            // particleGo.transform.position = Vector3.zero;   //移动到相机之外此时的粒子系统应该是完成播放完毕
+            particleSys.Stop(true);
         }
 
         /// <summary>
