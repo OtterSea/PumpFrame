@@ -55,13 +55,12 @@ namespace PumpFrame
             return true;
         }
 
-        public void OnSetActive(float rt, Vector3 position, Quaternion rotation, Vector3 scale)
+        public void OnSetActive(float rt, Vector3 position, Quaternion rotation)
         {
             isActive = true;
             remainTime = rt;
             particleGo.transform.position = position;
             particleGo.transform.rotation = rotation;
-            particleGo.transform.localScale = scale;
             particleSys.Stop(true);
             particleGo.SetActive(true);
         }

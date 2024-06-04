@@ -74,17 +74,17 @@ namespace PumpFrame
             }
         }
         
-        public void SetOneUnitActive(Vector3 position, Quaternion rotation, Vector3 scale)
+        public void SetOneUnitActive(Vector3 position, Quaternion rotation)
         {
             var unit = UnitPool.Get();
-            unit.OnSetActive(unit.GetParticleDuration(), position, rotation, scale);
+            unit.OnSetActive(unit.GetParticleDuration(), position, rotation);
             ActiveList.Add(unit);
         }
 
-        public void SetOneUnitActive(float duration, Vector3 position, Quaternion rotation, Vector3 scale)
+        public void SetOneUnitActive(float duration, Vector3 position, Quaternion rotation)
         {
             var unit = UnitPool.Get();
-            unit.OnSetActive(duration, position, rotation, scale);
+            unit.OnSetActive(duration, position, rotation);
             ActiveList.Add(unit);
         }
     }

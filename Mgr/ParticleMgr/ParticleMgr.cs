@@ -44,16 +44,16 @@ namespace PumpFrame
             return pool;
         }
 
-        public static void PlayParticle(string key, Vector3 position, Quaternion rotation, Vector3 scale)
+        public static void PlayParticle(string key, Vector3 position, Quaternion rotation)
         {
             var unitPool = Instance.GetParticleUnitPool(key);
-            unitPool.SetOneUnitActive(position, rotation, scale);
+            unitPool.SetOneUnitActive(position, rotation);
         }
         
-        public static void PlayParticle(string key, float duration, Vector3 position, Quaternion rotation, Vector3 scale)
+        public static void PlayParticle(string key, float duration, Vector3 position, Quaternion rotation)
         {
             var unitPool = Instance.GetParticleUnitPool(key);
-            unitPool.SetOneUnitActive(duration, position, rotation, scale);
+            unitPool.SetOneUnitActive(duration, position, rotation);
         }
         
         #endregion
