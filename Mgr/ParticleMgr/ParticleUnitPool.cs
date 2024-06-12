@@ -71,6 +71,11 @@ namespace PumpFrame
                     UnitPool.Release(unit);
                     ActiveList.RemoveAt(i);
                 }
+                else if (!unit.isActive)
+                {
+                    UnitPool.Release(unit);
+                    ActiveList.RemoveAt(i);
+                }
             }
         }
         
@@ -86,6 +91,18 @@ namespace PumpFrame
             var unit = UnitPool.Get();
             unit.OnSetActive(duration, position, rotation);
             ActiveList.Add(unit);
+        }
+
+        public ParticleUnit GetOneUnit()
+        {
+            var unit = UnitPool.Get();
+            ActiveList.Add(unit);
+            return unit;
+        }
+
+        public void ReleaseOneUnit(ParticleUnit unit)
+        {
+            
         }
     }
 }

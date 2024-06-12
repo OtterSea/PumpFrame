@@ -44,16 +44,52 @@ namespace PumpFrame
             return pool;
         }
 
+        /// <summary>
+        /// 在一个特定的地方播放一个特效，持续时间由特效的duration决定
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
         public static void PlayParticle(string key, Vector3 position, Quaternion rotation)
         {
             var unitPool = Instance.GetParticleUnitPool(key);
             unitPool.SetOneUnitActive(position, rotation);
         }
         
+        /// <summary>
+        /// 在一个特定地方播放一个特效，持续时间自己输入
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="duration"></param>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
         public static void PlayParticle(string key, float duration, Vector3 position, Quaternion rotation)
         {
             var unitPool = Instance.GetParticleUnitPool(key);
             unitPool.SetOneUnitActive(duration, position, rotation);
+        }
+
+        /// <summary>
+        /// 依据指定key从对象池中获得对应的粒子效果unit供给外界使用
+        /// 由外界管理生命周期（用于持续一段时间的跟踪在某个GO上）
+        /// 生命周期结束时，调用Release释放对应的unit
+        /// </summary>
+        /// <param name="key"></param>
+        public static ParticleUnit GetParticleUnit(string key)
+        {
+            var unitPool = Instance.GetParticleUnitPool(key);
+            var unit = unitPool.GetOneUnit();
+            unit.OnSetActive();
+            return unit;
+        }
+
+        /// <summary>
+        /// 释放unit到对象池中，并设置其为无父对象，不可见
+        /// </summary>
+        /// <param name="unit"></param>
+        public static void ReleaseParticleUnit(ParticleUnit unitGo)
+        {
+            unitGo.OnSetUnActive();
         }
         
         #endregion

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Profiling;
 using UnityEngine;
 
 namespace PumpFrame
@@ -45,6 +46,11 @@ namespace PumpFrame
         
         public bool OnUnitUpdate(float deltaTime)
         {
+            if (remainTime >= float.MaxValue)
+            {
+                return true;
+            }
+            
             remainTime -= deltaTime;
             // particleSys.Simulate(deltaTime);
             if (remainTime <= 0f)
@@ -55,6 +61,14 @@ namespace PumpFrame
             return true;
         }
 
+        public void OnSetActive()
+        {
+            isActive = true;
+            remainTime = float.MaxValue;
+            particleSys.Stop(true);
+            particleGo.SetActive(true);
+        }
+        
         public void OnSetActive(float rt, Vector3 position, Quaternion rotation)
         {
             isActive = true;
@@ -70,7 +84,7 @@ namespace PumpFrame
             isActive = false;
             remainTime = 0f;
             particleGo.SetActive(false);
-            // particleGo.transform.position = Vector3.zero;   //移动到相机之外此时的粒子系统应该是完成播放完毕
+            particleGo.transform.SetParent(null);
             particleSys.Stop(true);
         }
 
@@ -81,7 +95,6 @@ namespace PumpFrame
         public float GetParticleDuration()
         {
             return particleSys.main.duration;
-            // return 0f;
         }
     }
 }
