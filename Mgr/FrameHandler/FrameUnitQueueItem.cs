@@ -50,8 +50,9 @@ namespace PumpFrame
                     this.freezeLogicCount--;
                     return;
                 }
-                foreach (FrameUnit unit in _unitList)
+                for (int i = 0; i < _unitList.Count; i++)
                 {
+                    var unit = _unitList[i];
                     unit.Update(deltaTime);
                     unit.LogicTick();
                 }
@@ -62,8 +63,9 @@ namespace PumpFrame
                 {
                     return;
                 }
-                foreach (FrameUnit unit in _unitList)
+                for (int i = 0; i < _unitList.Count; i++)
                 {
+                    var unit = _unitList[i];
                     unit.Update(deltaTime);
                 }
             }

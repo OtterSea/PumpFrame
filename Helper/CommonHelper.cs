@@ -87,6 +87,22 @@ namespace PumpFrame
             }
             return new LayerMask(){ value = 1 << layer };
         }
+
+        public static LayerMask GetTargetLayerMaskMulti(string[] targetLayers)
+        {
+            int value = 0;
+            for (int i = 0; i < targetLayers.Length; i++)
+            {
+                string layerKey = targetLayers[i];
+                int layer = LayerMask.NameToLayer(layerKey);
+                if (layer < 0)
+                {
+                    throw new Exception($"错误的layer名：{layerKey}, 检查layer是否存在");
+                }
+                value += 1 << layer;
+            }
+            return new LayerMask(){ value = value };
+        }
         
         #endregion
     }
